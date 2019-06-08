@@ -38,7 +38,11 @@ public class Provider {
         return id;
     }
 
-    public String getCompany() {
+    public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getCompany() {
         return company;
     }
 

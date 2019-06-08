@@ -62,10 +62,10 @@ public class RestBuilder<T> {
 
 	private boolean log;
 
-	private boolean isHeroku = false;
+	private boolean isHeroku;
 
 	public RestBuilder(String serverUri, int port) {
-		restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // org.apache.httpcomponents.httpclient
+		//restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory()); // org.apache.httpcomponents.httpclient
 		this.serverUri = serverUri;
 		this.port = port;
 		this.path = "";
@@ -74,6 +74,7 @@ public class RestBuilder<T> {
 		this.mediaTytes = new ArrayList<>();
 		this.params = new HttpHeaders();
 		this.log = false;
+		this.isHeroku = false;
 	}
 
 	public RestBuilder() {
