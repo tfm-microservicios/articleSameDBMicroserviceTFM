@@ -18,7 +18,6 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import es.upm.miw.documents.Article;
 import es.upm.miw.documents.Provider;
 import es.upm.miw.repositories.ArticleRepository;
-import es.upm.miw.repositories.ProviderRepository;
 
 @Service
 public class DatabaseSeederService {
@@ -43,9 +42,6 @@ public class DatabaseSeederService {
 	@Autowired
 	private ArticleRepository articleRepository;
 
-	@Autowired
-	private ProviderRepository providerRepository;
-
 	@PostConstruct
 	public void constructor() {
 		String[] profiles = this.environment.getActiveProfiles();
@@ -59,8 +55,7 @@ public class DatabaseSeederService {
 	private void initialize() {
 		if (!this.articleRepository.existsById(VARIOUS_CODE)) {
 			LogManager.getLogger(this.getClass()).warn("------- Create Article Various -----------");
-			Provider provider = new Provider(VARIOUS_NAME);
-			this.providerRepository.save(provider);
+			Provider provider = null;
 			this.articleRepository.save(Article.builder(VARIOUS_CODE).reference(VARIOUS_NAME).description(VARIOUS_NAME)
 					.retailPrice("100.00").stock(1000).provider(provider).build());
 		}
@@ -70,7 +65,6 @@ public class DatabaseSeederService {
 		LogManager.getLogger(this.getClass()).warn("------- Delete All -----------");
 		// Delete Repositories -----------------------------------------------------
 		this.articleRepository.deleteAll();
-		this.providerRepository.deleteAll();
 		// -------------------------------------------------------------------------
 		this.initialize();
 	}
@@ -100,7 +94,6 @@ public class DatabaseSeederService {
 		DatabaseGraph tpvGraph = yamlParser.load(input);
 
 		// Save Repositories -----------------------------------------------------
-		this.providerRepository.saveAll(tpvGraph.getProviderList());
 		this.articleRepository.saveAll(tpvGraph.getArticleList());
 		// -----------------------------------------------------------------------
 
@@ -110,5 +103,4 @@ public class DatabaseSeederService {
 	public String nextCodeEan() {
 		throw new RuntimeException("Method nextCodeEan not implemented");
 	}
-
 }
