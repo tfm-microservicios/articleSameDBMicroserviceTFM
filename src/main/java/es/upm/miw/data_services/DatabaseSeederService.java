@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Provider;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.ArticleRepository;
 
 @Service
@@ -25,6 +26,14 @@ public class DatabaseSeederService {
 	private static final String VARIOUS_CODE = "1";
 
 	private static final String VARIOUS_NAME = "Varios";
+
+	private static final String NO_PROVIDER = "";
+
+	private static final String PREFIX_CODE_ARTICLE = "8400000";
+
+	private static final Long FIRST_CODE_ARTICLE = 840000000000L;
+
+	private static final Long LAST_CODE_ARTICLE = 840000099999L;
 
 	@Autowired
 	private Environment environment;
@@ -55,9 +64,8 @@ public class DatabaseSeederService {
 	private void initialize() {
 		if (!this.articleRepository.existsById(VARIOUS_CODE)) {
 			LogManager.getLogger(this.getClass()).warn("------- Create Article Various -----------");
-			Provider provider = null;
 			this.articleRepository.save(Article.builder(VARIOUS_CODE).reference(VARIOUS_NAME).description(VARIOUS_NAME)
-					.retailPrice("100.00").stock(1000).provider(provider).build());
+					.retailPrice("100.00").stock(1000).provider(NO_PROVIDER).build());
 		}
 	}
 
@@ -101,6 +109,22 @@ public class DatabaseSeederService {
 	}
 
 	public String nextCodeEan() {
-		throw new RuntimeException("Method nextCodeEan not implemented");
+
+		Article article = this.articleRepository.findFirstByCodeStartingWithOrderByCodeDesc(PREFIX_CODE_ARTICLE);
+
+		Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
+
+		if (article != null) {
+			String code = article.getCode();
+			String codeWithoutRedundancy = code.substring(0, code.length() - 1);
+
+			nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
+		}
+
+		if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
+			throw new ConflictException("There is not next code EAN");
+		}
+
+		return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
 	}
 }

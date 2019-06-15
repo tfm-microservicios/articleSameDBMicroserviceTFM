@@ -1,11 +1,10 @@
-package es.upm.miw.rest_controllers;
+package es.upm.miw.business_services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import es.upm.miw.business_services.JwtService;
 import es.upm.miw.documents.Role;
 import es.upm.miw.dtos.TokenOutputDto;
 import es.upm.miw.exceptions.JwtException;
@@ -94,6 +93,11 @@ public class RestService {
 
 	public String getAdminPassword() {
 		return adminPassword;
+	}
+
+	public RestService setToken(String token) {
+		this.tokenDto = new TokenOutputDto(token.substring("Bearer ".length()));
+		return this;
 	}
 
 }

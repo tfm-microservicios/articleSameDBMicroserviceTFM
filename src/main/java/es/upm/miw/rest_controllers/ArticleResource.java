@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -49,13 +50,15 @@ public class ArticleResource {
 	}
 
 	@PostMapping
-	public ArticleDto createArticle(@Valid @RequestBody ArticleDto articleDto) {
-		return this.articleController.createArticle(articleDto);
+	public ArticleDto createArticle(@Valid @RequestBody ArticleDto articleDto,
+			@RequestHeader("Authorization") String token) {
+		return this.articleController.createArticle(articleDto, token);
 	}
 
 	@PutMapping(value = CODE_ID)
-	public ArticleDto update(@PathVariable String code, @Valid @RequestBody ArticleDto articleDto) {
-		return this.articleController.update(code, articleDto);
+	public ArticleDto update(@PathVariable String code, @Valid @RequestBody ArticleDto articleDto,
+			@RequestHeader("Authorization") String token) {
+		return this.articleController.update(code, articleDto, token);
 	}
 
 	@DeleteMapping(value = CODE_ID)
