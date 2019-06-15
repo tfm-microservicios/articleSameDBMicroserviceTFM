@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+import es.upm.miw.business_services.Barcode;
 import es.upm.miw.documents.Article;
 import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.ArticleRepository;
@@ -28,7 +29,7 @@ public class DatabaseSeederService {
 
 	private static final String NO_PROVIDER = "";
 
-	private static final String PREFIX_CODE_ARTICLE = "84";
+	private static final String PREFIX_CODE_ARTICLE = "8400000";
 
 	private static final Long FIRST_CODE_ARTICLE = 840000000000L;
 
@@ -109,8 +110,7 @@ public class DatabaseSeederService {
 
 	public String nextCodeEan() {
 
-		/*Article article = this.articleRepository
-				.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
+		Article article = this.articleRepository.findFirstByCodeStartingWithOrderByCodeDesc(PREFIX_CODE_ARTICLE);
 
 		Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
 
@@ -125,8 +125,7 @@ public class DatabaseSeederService {
 			throw new ConflictException("There is not next code EAN");
 		}
 
-		return new Barcode().generateEan13code(nextCodeWithoutRedundancy);*/
-		return "";
+		return new Barcode().generateEan13code(nextCodeWithoutRedundancy);
 	}
 
 }

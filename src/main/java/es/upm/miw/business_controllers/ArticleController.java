@@ -54,7 +54,7 @@ public class ArticleController {
 
 	public ArticleDto createArticle(ArticleDto articleDto, String token) {
 		String code = articleDto.getCode();
-		if (code == null) {
+		if (code == null || code == "") {
 			code = this.databaseSeederService.nextCodeEan();
 		}
 		if (this.articleRepository.findById(code).isPresent()) {
