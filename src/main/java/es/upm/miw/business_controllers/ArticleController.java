@@ -69,7 +69,7 @@ public class ArticleController {
 
 	private boolean checkProviderId(String providerId, String token) {
 
-		if (providerId != null && providerId != "") {
+		if (providerId == null || providerId == "") {
 			return false;
 		}
 
