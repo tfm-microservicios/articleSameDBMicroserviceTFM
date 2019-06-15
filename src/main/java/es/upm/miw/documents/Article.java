@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -27,8 +26,7 @@ public class Article {
 
 	private Boolean discontinued;
 
-	@DBRef(lazy = true)
-	private Provider provider;
+	private String providerId;
 
 	public Article() {
 		this.registrationDate = LocalDateTime.now();
@@ -86,12 +84,12 @@ public class Article {
 		this.discontinued = discontinued;
 	}
 
-	public Provider getProvider() {
-		return provider;
+	public String getProviderId() {
+		return providerId;
 	}
 
-	public void setProvider(Provider provider) {
-		this.provider = provider;
+	public void setProviderId(String providerId) {
+		this.providerId = providerId;
 	}
 
 	public Tax getTax() {
@@ -120,7 +118,7 @@ public class Article {
 	public String toString() {
 		return "Article{" + "code='" + code + '\'' + ", registrationDate=" + registrationDate + ", description='"
 				+ description + '\'' + ", retailPrice=" + retailPrice + ", reference='" + reference + '\'' + ", stock="
-				+ stock + ", tax=" + tax + ", discontinued=" + discontinued + ", provider=" + provider + '}';
+				+ stock + ", tax=" + tax + ", discontinued=" + discontinued + ", providerId=" + providerId + '}';
 	}
 
 	public static class Builder {
@@ -159,8 +157,8 @@ public class Article {
 			return this;
 		}
 
-		public Builder provider(Provider provider) {
-			this.article.provider = provider;
+		public Builder provider(String providerId) {
+			this.article.providerId = providerId;
 			return this;
 		}
 

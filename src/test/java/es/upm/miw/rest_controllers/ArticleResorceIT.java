@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import es.upm.miw.business_services.RestBuilder;
+import es.upm.miw.business_services.RestService;
 import es.upm.miw.dtos.ArticleDto;
 
 @ApiTestConfig
