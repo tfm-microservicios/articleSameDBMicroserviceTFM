@@ -16,9 +16,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
 import es.upm.miw.documents.Article;
-import es.upm.miw.documents.Provider;
+import es.upm.miw.exceptions.ConflictException;
 import es.upm.miw.repositories.ArticleRepository;
-import es.upm.miw.repositories.ProviderRepository;
 
 @Service
 public class DatabaseSeederService {
@@ -26,6 +25,14 @@ public class DatabaseSeederService {
 	private static final String VARIOUS_CODE = "1";
 
 	private static final String VARIOUS_NAME = "Varios";
+
+	private static final String NO_PROVIDER = "";
+
+	private static final String PREFIX_CODE_ARTICLE = "84";
+
+	private static final Long FIRST_CODE_ARTICLE = 840000000000L;
+
+	private static final Long LAST_CODE_ARTICLE = 840000099999L;
 
 	@Autowired
 	private Environment environment;
@@ -43,9 +50,6 @@ public class DatabaseSeederService {
 	@Autowired
 	private ArticleRepository articleRepository;
 
-	@Autowired
-	private ProviderRepository providerRepository;
-
 	@PostConstruct
 	public void constructor() {
 		String[] profiles = this.environment.getActiveProfiles();
@@ -59,10 +63,8 @@ public class DatabaseSeederService {
 	private void initialize() {
 		if (!this.articleRepository.existsById(VARIOUS_CODE)) {
 			LogManager.getLogger(this.getClass()).warn("------- Create Article Various -----------");
-			Provider provider = new Provider(VARIOUS_NAME);
-			this.providerRepository.save(provider);
 			this.articleRepository.save(Article.builder(VARIOUS_CODE).reference(VARIOUS_NAME).description(VARIOUS_NAME)
-					.retailPrice("100.00").stock(1000).provider(provider).build());
+					.retailPrice("100.00").stock(1000).provider(NO_PROVIDER).build());
 		}
 	}
 
@@ -70,7 +72,6 @@ public class DatabaseSeederService {
 		LogManager.getLogger(this.getClass()).warn("------- Delete All -----------");
 		// Delete Repositories -----------------------------------------------------
 		this.articleRepository.deleteAll();
-		this.providerRepository.deleteAll();
 		// -------------------------------------------------------------------------
 		this.initialize();
 	}
@@ -100,7 +101,6 @@ public class DatabaseSeederService {
 		DatabaseGraph tpvGraph = yamlParser.load(input);
 
 		// Save Repositories -----------------------------------------------------
-		this.providerRepository.saveAll(tpvGraph.getProviderList());
 		this.articleRepository.saveAll(tpvGraph.getArticleList());
 		// -----------------------------------------------------------------------
 
@@ -108,7 +108,25 @@ public class DatabaseSeederService {
 	}
 
 	public String nextCodeEan() {
-		throw new RuntimeException("Method nextCodeEan not implemented");
+
+		/*Article article = this.articleRepository
+				.findFirstByCodeStartingWithOrderByRegistrationDateDescCodeDesc(PREFIX_CODE_ARTICLE);
+
+		Long nextCodeWithoutRedundancy = FIRST_CODE_ARTICLE;
+
+		if (article != null) {
+			String code = article.getCode();
+			String codeWithoutRedundancy = code.substring(0, code.length() - 1);
+
+			nextCodeWithoutRedundancy = Long.parseLong(codeWithoutRedundancy) + 1L;
+		}
+
+		if (nextCodeWithoutRedundancy > LAST_CODE_ARTICLE) {
+			throw new ConflictException("There is not next code EAN");
+		}
+
+		return new Barcode().generateEan13code(nextCodeWithoutRedundancy);*/
+		return "";
 	}
 
 }
