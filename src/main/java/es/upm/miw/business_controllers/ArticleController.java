@@ -52,6 +52,10 @@ public class ArticleController {
 				.orElseThrow(() -> new NotFoundException("Article code (" + code + ")")));
 	}
 
+	public boolean isPresent(String code) {
+    	return this.readArticle(code) != null;
+    }
+	
 	public ArticleDto createArticle(ArticleDto articleDto, String token) {
 		String code = articleDto.getCode();
 		if (code == null || code == "") {
