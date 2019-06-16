@@ -30,6 +30,7 @@ public class ArticleResource {
 	public static final String CODE_ID = "/{code}";
 	public static final String MINIMUM = "/minimum";
 	public static final String SEARCH = "/search";
+	public static final String VALIDATE = "/validate";
 
 	@Autowired
 	private ArticleController articleController;
@@ -42,6 +43,11 @@ public class ArticleResource {
 	@GetMapping(value = CODE_ID)
 	public ArticleDto readArticle(@PathVariable String code) {
 		return this.articleController.readArticle(code);
+	}
+	
+	@GetMapping(value = CODE_ID + VALIDATE)
+	public boolean isPresent(@PathVariable String code) {
+		return this.articleController.isPresent(code);
 	}
 
 	@GetMapping(value = MINIMUM)
